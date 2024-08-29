@@ -11,12 +11,12 @@ async function getAll(req, res, next) {
         if (!users) {
             return res.status(400).json({message: "Didn't get users!"})
         }
-        let usernames = []
+        let results = []
         for (let i = 0; i < users.length; i++) {
-            const {username} = users[i]
-            usernames.push(username)
+            const {username, user_id, email} = users[i]
+            results.push({username, user_id, email})
         }
-        res.status(200).json(usernames)
+        res.status(200).json(results)
     } catch (err) {
         next(err)
     }
@@ -24,12 +24,14 @@ async function getAll(req, res, next) {
 
 async function getUser(req, res, next) {
     try {
-        const {subject} = req.params
-        const user = await User.getUserByEmail(subject)
-        const img = fs.readFileSync(path.join(__dirname, "..", user.image_path))
-        const result = {...user, password: undefined, pic: img}
+        const {user_id} = req.params
+        const user = await User.getUserById(user_id)
+        
+        
+        const result = {...user, password: undefined, pic: user.image_path.split("/")[2]}
+        
         res.json(result)
-        console.log(img)
+        
     } catch (err) {
         next(err)
     }

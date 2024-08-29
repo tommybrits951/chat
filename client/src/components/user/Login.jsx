@@ -9,13 +9,16 @@ const initForm = {
 export default function Login() {
     const [formData, setFormData] = useState(initForm)
     const [err, setErr] = useState("")
+
     function change(e) {
         const {name, value} = e.target
         setFormData({...formData, [name]: value})
     }
-    const {assignToken} = useContext(Chat)
-    const navigate = useNavigate()
 
+    const {assignToken} = useContext(Chat)
+
+    const navigate = useNavigate()
+    
     async function submit(e) {
         e.preventDefault()
         axios.post("http://localhost:9000/auth", formData, {
@@ -25,12 +28,13 @@ export default function Login() {
         .then(res => {
             setErr("")
             assignToken(res.data)
+            console.log(res.data)
             setFormData(initForm)
             navigate("/")
         })
         .catch(err => {
-            console.log(err.message)
-            setErr(err?.data?.message)
+            console.log(err)
+            setErr(err?.response?.data?.message)
     })
     }
     return (
