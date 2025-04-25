@@ -1,0 +1,8 @@
+const clss = {
+    mobile: {
+
+    },
+    desktop: {
+
+    }
+}
