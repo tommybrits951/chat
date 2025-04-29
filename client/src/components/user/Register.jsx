@@ -1,17 +1,20 @@
-import { useState, useContext } from 'react'
-import axios from '../../api/axios'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import axios from 'axios'
 const initForm = {
     firstName: "",
     lastName: "",
     dob: "",
     email: "",
-    password: ""
+    password: "",
+    postal: ""
 }
 
 export default function Register() {
     const [formData, setFormData] = useState(initForm)
-    const [img, setImg] = useState()
-
+    const [img, setImg] = useState(null)
+    const navigate = useNavigate()
     function change(e) {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
@@ -27,13 +30,22 @@ export default function Register() {
         Object.keys(formData).map(key => {
             pkg.append(`${key}`, formData[key])
         })
+
         pkg.append("img", img)
-        console.log(pkg)
-        axios.post(`/users`, pkg)
+
+
+
+        axios.post(`/users`, pkg, {
+            withCredentials: true,
+            baseURL: "http://localhost:9000"
+        })
             .then(res => {
                 console.log(res.data)
             })
             .catch(err => console.log(err))
+            .finally(() => {
+                navigate("/")
+            })
     }
     function changeImg(e) {
         console.log(e.target.files[0])
@@ -55,7 +67,7 @@ export default function Register() {
                     <br />
                     <input placeholder='Date Of Birth' autoComplete='off' className='bg-white rounded p-1 text-black w-3/4' type='date' name="dob" value={formData.dob} onChange={change} required />
                 </label>
-                <label className='text-white text-lg'>Date of Birth
+                <label className='text-white text-lg'>Postal/Zip Code
                     <br />
                     <input placeholder='Postal/Zip Code' autoComplete='off' className='bg-white rounded p-1 text-black w-3/4' type='number' name="postal" value={formData.postal} onChange={change} required />
                 </label>

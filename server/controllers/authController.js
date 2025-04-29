@@ -55,7 +55,22 @@ async function refreshHandle(req, res) {
         res.status(401).json({ message: "Not Authorized!" })
     }
 }
+
+async function authUser(req, res) {
+    try {
+        const token = req.headers.authorization
+        const tmp = token.split(" ")[1]
+        const decoded = jwt.verify(tmp, process.env.ACCESS)
+        const user = await User.findById(decoded._id)
+
+        res.status(200).json(user)
+    } catch (err) {
+        res.status(500).json({ message: err.message || "Problem authorizing user!" })
+    }
+}
+
 module.exports = {
     login,
-    refreshHandle
+    refreshHandle,
+    authUser
 }

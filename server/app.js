@@ -19,7 +19,7 @@ app.use(cookieParser())
 app.use("/users", require("./routes/userRoutes"))
 app.use("/auth", require("./routes/authRoutes"))
 app.use("/message", require("./routes/messageRoutes"))
-
+app.use("/image", express.static("images"))
 
 
 

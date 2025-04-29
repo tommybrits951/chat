@@ -1,40 +1,61 @@
 const Message = require("../models/Message")
+const User = require("../models/User")
+const jwt = require("jsonwebtoken")
 
 
-async function sendMessage(req, res) {
+
+async function insertMessage(req, res) {
     try {
         const { sender, recipient, message } = req.body
-        if (!sender || !recipient || !message) {
-            return res.status(400).json({ message: "All fields required!" })
-        }
         const timeSent = new Date().getTime()
+        if (!sender) {
+            return res.status(400).json({ message: "No Sender!" })
+        } else if (!recipient) {
+            return res.status(400).json({ message: "No Recipient!" })
+        } else if (!message) {
+            return res.status(400).json({ message: "No Message!" })
+        }
+        const verifySender = await User.findById(sender)
+        const verifyRecipient = await User.findById(recipient)
+        if (!verifyRecipient || !verifySender) {
+            return res.status(400).json({ message: "The recipient account or your account can't be found!" })
+        }
         const response = await Message.create({ sender, recipient, message, timeSent })
         if (response) {
-            res.json({ response })
+            res.status(201).json({ message: "Message sent!", data: response })
         }
     } catch (err) {
-        res.status(500).json({ message: err.message || "Could not get chats!" })
+        res.status(500).json({ message: "Problem sending message!" })
     }
 }
-async function getChats(req, res) {
+
+async function getChat(req, res) {
     try {
-        const { _id } = req.params
-        const sent = await Message.find({ sender: _id }).exec()
-        const received = await Message.find({ recipient: _id }).exec()
-        let messages = []
-        sent.map(mes => {
-            messages = [...messages, mes]
+
+        const auth = req.headers.authorization
+        const token = auth.split(' ')[1]
+        const { _id } = jwt.verify(token, process.env.ACCESS)
+        const user = await User.findById(_id)
+        const received = await Message.find({ recipient: user._id }).populate("sender").populate("recipient")
+        const sent = await Message.find({ sender: user._id }).populate('recipient').populate("sender")
+        let messages = [...received]
+        sent.map(mess => {
+            messages = [...messages, mess]
         })
-        received.map(mes => {
-            messages = [...messages, mes]
+        messages.sort(function (a, b) {
+            return b.timeSent - a.timeSent
         })
-        messages = messages.sort((a, b) => a < b)
         console.log(messages)
+
+        res.status(200).json(messages)
+
     } catch (err) {
-        res.status(500).json({ message: err.message || "Could not get chats!" })
+        res.status(500).json({ message: "Problem getting message!" })
     }
 }
+
+
 module.exports = {
-    sendMessage,
-    getChats
+    insertMessage,
+    getChat
 }

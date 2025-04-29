@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import axios from '../../api/axios'
+import { useState, useContext } from 'react'
+import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import useAuth from "../../hooks/useAuth"
+import ChatContext from '../../context/ChatContext'
 const initForm = {
   email: "",
   password: ""
@@ -10,8 +10,9 @@ const initForm = {
 export default function Login() {
   const [formData, setFormData] = useState(initForm)
   const [err, setErr] = useState("")
+  const { auth, setAuth } = useContext(ChatContext)
   const navigate = useNavigate()
-  const { setAuth, auth } = useAuth()
+
   function change(e) {
     setErr("")
     const { name, value } = e.target
@@ -23,7 +24,10 @@ export default function Login() {
     Object.keys(formData).map(key => {
       pkg.append(key, formData[key])
     })
-    axios.post("/auth", pkg)
+    axios.post("http://localhost:9000/auth", pkg, {
+      withCredentials: true,
+      baseURL: "http://localhost:9000"
+    })
       .then(res => {
         setAuth(res.data.accessToken)
       })

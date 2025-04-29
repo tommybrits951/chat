@@ -1,16 +1,16 @@
-
 import './App.css'
-import { useEffect, useContext } from 'react'
+import { useEffect, useContext, useState } from 'react'
 import Home from './Home'
-import AuthContext from './context/AuthProvider'
-import { ChatProvider } from "./context/ChatProvider"
+import ChatContext from './context/ChatContext'
 import axios from 'axios'
+import useUser from './hooks/useUser'
 
 
 function App() {
-
-  const { setAuth, auth } = useContext(AuthContext)
-
+  const [auth, setAuth] = useState(null)
+  const [user, setUser] = useUser({ auth })
+  const [chats, setChats] = useState([])
+  const [userList, setUserList] = useState([])
 
   useEffect(() => {
     auth === null ? axios.get("http://localhost:9000/auth", {
@@ -20,13 +20,49 @@ function App() {
       .then(res => {
         setAuth(res.data.accessToken)
       })
-      .catch(err => console.log(err)) : null
+      .catch(err => {
+        null
+      }) : null
   }, [])
+  useEffect(() => {
+    console.log(user)
+  }, [])
+  useEffect(() => {
+    auth ? axios.get("http://localhost:9000/users", {
+      withCredentials: true,
+      baseURL: "http://localhost:9000",
+      headers: {
+        Authorization: `Bearer ${auth}`
+      }
+    })
+      .then(res => {
+        console.log(res.data)
+        setUserList(res.data)
+      })
+      .catch(err => console.log(err))
+      : null
+  }, [auth])
+  useEffect(() => {
+    auth ? axios.get(`http://localhost:9000/message`, {
+      withCredentials: true,
+      baseURL: "http://localhost:9000",
+      headers: {
+        Authorization: `Bearer ${auth}`
+      }
+    })
+      .then(res => {
+        console.log(res.data)
+        setChats(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      }) : null
+  }, [auth])
   return (
     <main className='absolute w-full h-full bg-sky-200'>
-      <ChatProvider>
+      <ChatContext.Provider value={{ auth, setAuth, user, setUser, chats, setChats, userList, setUserList }}>
         <Home />
-      </ChatProvider>
+      </ChatContext.Provider>
     </main>
   )
 }
