@@ -10,6 +10,7 @@ async function checkAuth(req, res, next) {
         if (!user) {
             return res.status(401).json({ message: "Not Authorized!" })
         }
+        req.body.user = user
         next()
     } catch (err) {
         next(err)

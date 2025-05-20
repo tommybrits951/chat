@@ -37,14 +37,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "/default/account.png"
     },
-    imageId: {
-        type: String,
-        required: true
-    },
+
     joined: {
         type: Date,
         required: true
     },
+    requests: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
     refreshToken: String
 })
 

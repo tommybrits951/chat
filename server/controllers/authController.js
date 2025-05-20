@@ -21,8 +21,11 @@ async function login(req, res) {
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password required!" })
         }
-
-        const user = await User.findOne({ email }).exec()
+        const user = await User.findOne({ email }).populate('contacts').exec()
+        const changeStream = User.watch()
+        changeStream.on("query", next => {
+            console.log(next)
+        })
         const verifiedPassword = bcrypt.compareSync(password, user.password)
         if (!user || !verifiedPassword) {
             return res.status(401).json({ message: "Email or Password incorrect!" })
@@ -72,5 +75,6 @@ async function authUser(req, res) {
 module.exports = {
     login,
     refreshHandle,
-    authUser
+    authUser,
+    buildToken
 }

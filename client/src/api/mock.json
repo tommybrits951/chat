@@ -1,0 +1,50 @@
+[
+    {
+        "sender":
+        {
+            "$oid": "68175f54e718eedde66849cf"
+        },
+        "recipient": 
+        {
+            "$oid": "68175fa5da6828cd1531163c"
+        },
+        "message": "Good. And you...?",
+        "timeSent": "2025-04-04T12:36:57.112+00:00"
+    },
+    {
+        "sender":
+        {
+            "$oid": "68175fa5da6828cd1531163c"
+        },
+        "recipient": 
+        {
+            "$oid": "68175f54e718eedde66849cf"
+        },
+        "message": "How's it going?",
+        "timeSent": "2025-04-04T12:36:57.112+00:00"
+    },
+    {
+        "sender":
+        {
+            "$oid": "68175f54e718eedde66849cf"
+        },
+        "recipient": 
+        {
+            "$oid": "68175fa5da6828cd1531163c"
+        },
+        "message": "How's it going?",
+        "timeSent": "2025-04-04T12:36:57.112+00:00"
+    },
+    {
+        "sender":
+        {
+            "$oid": "68175fa5da6828cd1531163c"
+        },
+        "recipient": 
+        {
+            "$oid": "68175f54e718eedde66849cf"
+        },
+        "message": "How's it going?",
+        "timeSent": "2025-04-04T12:36:57.112+00:00"
+    }
+]

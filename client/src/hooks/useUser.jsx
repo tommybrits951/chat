@@ -13,7 +13,6 @@ export default function useUser({ auth }) {
         })
             .then(res => {
                 setUser(res.data)
-                console.log(res.data)
             })
             .catch(err => console.log(err))
             : null

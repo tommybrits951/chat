@@ -14,7 +14,7 @@ const messageSchema = new mongoose.Schema({
         required: true
     },
     timeSent: {
-        type: Number,
+        type: Date,
         required: true
     }
 })

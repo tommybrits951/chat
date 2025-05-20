@@ -3,7 +3,8 @@
 }
 
 ::-webkit-scrollbar {
-    width: 16px;
+    width: 15px;
+
 }
 
 ::-webkit-scrollbar-track {}
@@ -11,4 +12,16 @@
 ::-webkit-scrollbar-thumb {
     border-radius: 12px;
     background-color: black;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+}
+
+img {
+    size: 100%;
 }
